@@ -13,7 +13,7 @@ Pas juste "installer des outils".
 | # | Brique | Rôle | Statut |
 |---|--------|------|--------|
 | 1 | Wazuh | SIEM — collecte et corrélation de logs | ✅ déployé |
-| 2 | Sysmon | Visibilité fine endpoint Windows | ⏳ à venir |
+| 2 | Sysmon | Visibilité fine endpoint Windows | ✅ déployé |
 | 3 | Suricata | Détection réseau | ⏳ à venir |
 | 4 | MISP | Threat Intel — enrichissement | ⏳ à venir |
 | 5 | TheHive + Cortex | Gestion et enrichissement automatique des incidents | ⏳ à venir |
@@ -24,7 +24,8 @@ Chaque brique est ajoutée une fois la précédente maîtrisée et testée. Voir
 ## Environnement
 
 - **SIEM (Wazuh)** : Docker Compose, sur cette machine hôte (Windows 11 + Docker Desktop)
-- **Victime** : VM Windows isolée (Hyper-V) — à provisionner en brique 2
+- **Victime** : VM Windows isolée (Hyper-V, Gen1), `victim-win10`, Windows 10
+  Pro + Sysmon + agent Wazuh
 - **Attaquant** : Kali via WSL2
 
 ## Démarrage rapide — Wazuh
@@ -41,3 +42,4 @@ Dashboard : https://localhost — utilisateur `admin`, mot de passe par défaut
 ## Journal des briques
 
 - [docs/01-wazuh-siem.md](docs/01-wazuh-siem.md)
+- [docs/02-sysmon.md](docs/02-sysmon.md)
