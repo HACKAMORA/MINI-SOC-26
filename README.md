@@ -14,7 +14,7 @@ Pas juste "installer des outils".
 |---|--------|------|--------|
 | 1 | Wazuh | SIEM — collecte et corrélation de logs | ✅ déployé |
 | 2 | Sysmon | Visibilité fine endpoint Windows | ✅ déployé |
-| 3 | Suricata | Détection réseau | ⏳ à venir |
+| 3 | Suricata | Détection réseau | ✅ déployé |
 | 4 | MISP | Threat Intel — enrichissement | ⏳ à venir |
 | 5 | TheHive + Cortex | Gestion et enrichissement automatique des incidents | ⏳ à venir |
 
@@ -26,7 +26,12 @@ Chaque brique est ajoutée une fois la précédente maîtrisée et testée. Voir
 - **SIEM (Wazuh)** : Docker Compose, sur cette machine hôte (Windows 11 + Docker Desktop)
 - **Victime** : VM Windows isolée (Hyper-V, Gen1), `victim-win10`, Windows 10
   Pro + Sysmon + agent Wazuh
-- **Attaquant** : Kali via WSL2
+- **Attaquant** : hôte Windows (Nmap) — Kali WSL2 disponible mais non routé
+  vers la VM victime (isolation réseau Hyper-V/WSL non contournée, voir
+  [docs/03-suricata.md](docs/03-suricata.md))
+- **IDS réseau (Suricata)** : sur l'hôte, capture `vEthernet (Default
+  Switch)` via dumpcap + analyse par tranches (voir
+  `scripts/suricata-capture-loop.ps1`)
 
 ## Démarrage rapide — Wazuh
 
@@ -43,3 +48,4 @@ Dashboard : https://localhost — utilisateur `admin`, mot de passe par défaut
 
 - [docs/01-wazuh-siem.md](docs/01-wazuh-siem.md)
 - [docs/02-sysmon.md](docs/02-sysmon.md)
+- [docs/03-suricata.md](docs/03-suricata.md)
