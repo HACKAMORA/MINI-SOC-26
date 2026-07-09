@@ -1,0 +1,6 @@
+# Generated TLS certs / private keys — regenerated locally via generate-indexer-certs.yml
+wazuh/single-node/config/wazuh_indexer_ssl_certs/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
