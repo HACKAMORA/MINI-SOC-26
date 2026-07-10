@@ -15,7 +15,7 @@ Pas juste "installer des outils".
 | 1 | Wazuh | SIEM — collecte et corrélation de logs | ✅ déployé |
 | 2 | Sysmon | Visibilité fine endpoint Windows | ✅ déployé |
 | 3 | Suricata | Détection réseau | ✅ déployé |
-| 4 | MISP | Threat Intel — enrichissement | ⏳ à venir |
+| 4 | MISP | Threat Intel — enrichissement | ✅ déployé |
 | 5 | TheHive + Cortex | Gestion et enrichissement automatique des incidents | ⏳ à venir |
 
 Chaque brique est ajoutée une fois la précédente maîtrisée et testée. Voir
@@ -32,6 +32,7 @@ Chaque brique est ajoutée une fois la précédente maîtrisée et testée. Voir
 - **IDS réseau (Suricata)** : sur l'hôte, capture `vEthernet (Default
   Switch)` via dumpcap + analyse par tranches (voir
   `scripts/suricata-capture-loop.ps1`)
+- **Threat Intel (MISP)** : Docker Compose, `misp/`, sur cette même machine
 
 ## Démarrage rapide — Wazuh
 
@@ -44,8 +45,21 @@ docker compose up -d
 Dashboard : https://localhost — utilisateur `admin`, mot de passe par défaut
 `SecretPassword` (voir `docker-compose.yml`, à changer avant tout usage exposé).
 
+## Démarrage rapide — MISP
+
+```bash
+cd misp
+docker compose up -d
+```
+
+Interface : https://localhost:8443 — utilisateur `admin@mini-soc.local`
+(voir `misp/.env`, mot de passe défini via `cake user change_pw`, non
+versionné). Premier démarrage lent (10-15 min, voir
+[docs/04-misp.md](docs/04-misp.md)).
+
 ## Journal des briques
 
 - [docs/01-wazuh-siem.md](docs/01-wazuh-siem.md)
 - [docs/02-sysmon.md](docs/02-sysmon.md)
 - [docs/03-suricata.md](docs/03-suricata.md)
+- [docs/04-misp.md](docs/04-misp.md)

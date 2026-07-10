@@ -5,6 +5,10 @@ wazuh/single-node/config/wazuh_indexer_ssl_certs/
 vms/**/*.vhdx
 vms/**/*.avhdx
 
+# MISP secrets (DB/Redis passwords, encryption keys, admin key) — generated
+# locally from misp/template.env, never versioned
+misp/.env
+
 # OS / editor cruft
 .DS_Store
 Thumbs.db
