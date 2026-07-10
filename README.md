@@ -17,13 +17,14 @@ Pas juste "installer des outils".
 | 3 | Suricata | Détection réseau | ✅ déployé |
 | 4 | MISP | Threat Intel — enrichissement | ✅ déployé |
 | 5 | TheHive + Cortex | Gestion et enrichissement automatique des incidents | ✅ déployé |
+| 6 | Dashboard custom | Plateforme unifiée (Next.js), vue alertes + topologie | ✅ v1 déployée |
 
 Chaque brique est ajoutée une fois la précédente maîtrisée et testée. Voir
 [docs/](docs/) pour le journal détaillé de chaque étape.
 
-Les 5 briques du moteur de détection sont en place. Prochaine étape : une
-plateforme/dashboard custom unifiant Wazuh, MISP et TheHive/Cortex derrière
-une seule interface.
+Les 5 briques du moteur de détection sont en place, et une première version
+du dashboard unifié consomme déjà les données Wazuh en lecture seule.
+Prochaine étape : y brancher MISP et TheHive/Cortex.
 
 ## Environnement
 
@@ -39,6 +40,8 @@ une seule interface.
 - **Threat Intel (MISP)** : Docker Compose, `misp/`, sur cette même machine
 - **Gestion d'incidents (TheHive + Cortex)** : Docker Compose,
   `thehive/testing/`, sur cette même machine
+- **Dashboard unifié** : Next.js, `dashboard/`, consomme l'API Wazuh en
+  lecture seule côté serveur
 
 ## Démarrage rapide — Wazuh
 
@@ -75,6 +78,18 @@ Voir [docs/05-thehive-cortex.md](docs/05-thehive-cortex.md) pour
 l'initialisation (fichiers `secret.conf`/`index.conf`/`.env` non versionnés,
 à régénérer localement) et l'incident mémoire WSL2 rencontré.
 
+## Démarrage rapide — Dashboard
+
+```bash
+cd dashboard
+cp .env.example .env.local   # renseigner les identifiants Wazuh réels
+npm install
+npm run dev
+```
+
+Interface : http://localhost:3000. Voir
+[docs/06-dashboard.md](docs/06-dashboard.md).
+
 ## Journal des briques
 
 - [docs/01-wazuh-siem.md](docs/01-wazuh-siem.md)
@@ -82,3 +97,4 @@ l'initialisation (fichiers `secret.conf`/`index.conf`/`.env` non versionnés,
 - [docs/03-suricata.md](docs/03-suricata.md)
 - [docs/04-misp.md](docs/04-misp.md)
 - [docs/05-thehive-cortex.md](docs/05-thehive-cortex.md)
+- [docs/06-dashboard.md](docs/06-dashboard.md)
