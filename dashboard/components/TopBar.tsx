@@ -1,10 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSession, signOut } from "next-auth/react";
 import { IconSearch } from "./icons";
 
 export function TopBar() {
+  const { data: session } = useSession();
   const [now, setNow] = useState<Date | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     setNow(new Date());
@@ -33,8 +36,24 @@ export function TopBar() {
             ? now.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", second: "2-digit" })
             : "--:--:--"}
         </div>
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand text-xs font-semibold text-white">
-          A
+        <div className="relative">
+          <button
+            onClick={() => setMenuOpen((v) => !v)}
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-brand text-xs font-semibold text-white"
+          >
+            {session?.user?.email?.[0]?.toUpperCase() ?? "?"}
+          </button>
+          {menuOpen && (
+            <div className="absolute right-0 top-10 z-10 w-56 rounded-lg border border-border bg-surface p-2 shadow-lg">
+              <div className="px-2 py-1.5 text-xs text-muted truncate">{session?.user?.email}</div>
+              <button
+                onClick={() => signOut({ callbackUrl: "/login" })}
+                className="w-full rounded-md px-2 py-1.5 text-left text-sm text-foreground hover:bg-surface-hover"
+              >
+                Se déconnecter
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>

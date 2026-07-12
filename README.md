@@ -24,7 +24,19 @@ Chaque brique est ajoutée une fois la précédente maîtrisée et testée. Voir
 
 Les 5 briques du moteur de détection sont en place, et une première version
 du dashboard unifié consomme déjà les données Wazuh en lecture seule.
-Prochaine étape : y brancher MISP et TheHive/Cortex.
+
+### Phase 2 — plateforme multi-utilisateurs
+
+Plan complet : [docs/00-platform-plan.md](docs/00-platform-plan.md).
+Objectif : que plusieurs personnes utilisent le Mini-SOC en même temps,
+chacune avec son propre labo isolé.
+
+| # | Brique | Objectif | Statut |
+|---|--------|----------|--------|
+| 7 | Hébergement cloud | Migrer sur un serveur Linux dédié (fin de la fragilité Hyper-V/WSL2) | ⏳ en attente (GitHub Student Pack approuvé, actif dans 72h) |
+| 8 | Authentification dashboard | Auth.js + Prisma/SQLite, login requis | ✅ déployé |
+| 9 | Isolation Wazuh par utilisateur | Groupes d'agents + filtrage serveur | ⏳ à venir |
+| 10 | Orchestrateur de labos | Conteneurs à la demande, isolés par utilisateur | ⏳ à venir |
 
 ## Environnement
 
@@ -82,13 +94,16 @@ l'initialisation (fichiers `secret.conf`/`index.conf`/`.env` non versionnés,
 
 ```bash
 cd dashboard
-cp .env.example .env.local   # renseigner les identifiants Wazuh réels
+cp .env.example .env.local   # renseigner les identifiants Wazuh + AUTH_SECRET
 npm install
+npx prisma migrate dev --name init
+npx tsx prisma/seed.ts <email> <mot-de-passe>   # créer un compte
 npm run dev
 ```
 
-Interface : http://localhost:3000. Voir
-[docs/06-dashboard.md](docs/06-dashboard.md).
+Interface : http://localhost:3000 (login requis). Voir
+[docs/06-dashboard.md](docs/06-dashboard.md) et
+[docs/07-dashboard-auth.md](docs/07-dashboard-auth.md).
 
 ## Journal des briques
 
@@ -98,3 +113,5 @@ Interface : http://localhost:3000. Voir
 - [docs/04-misp.md](docs/04-misp.md)
 - [docs/05-thehive-cortex.md](docs/05-thehive-cortex.md)
 - [docs/06-dashboard.md](docs/06-dashboard.md)
+- [docs/07-dashboard-auth.md](docs/07-dashboard-auth.md)
+- [docs/00-platform-plan.md](docs/00-platform-plan.md) — plan de la phase 2 (multi-utilisateurs)

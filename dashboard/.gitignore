@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/lib/generated/prisma
+
+# SQLite database file (local dev data, never versioned — Prisma writes it
+# next to schema.prisma's resolved cwd, which ends up at the project root)
+/dev.db
+*.db-journal

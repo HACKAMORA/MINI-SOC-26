@@ -1,0 +1,23 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  passwordHash String
+  // Wazuh agent group this user's data is scoped to. Derived deterministically
+  // from the user id at creation (see prisma/seed.ts) — never client-editable,
+  // every server-side query must filter by this value (brique 9).
+  wazuhGroup   String   @unique
+  createdAt    DateTime @default(now())
+}
