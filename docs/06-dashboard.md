@@ -71,6 +71,20 @@ la main pour un rendu stable et prévisible).
    Wazuh — seuls des sous-champs comme `os.name`/`os.platform` sont
    acceptés. Corrigé après lecture du message d'erreur (utile : l'API
    Wazuh liste les champs valides dans sa réponse 400).
+4. **Le problème d'exclusion de ports Windows (#2) est récurrent, pas
+   ponctuel.** Après un redémarrage complet de la machine, non seulement
+   `58000` mais aussi `1514`/`1515` (connexion des agents) sont retombés
+   dans de **nouvelles** plages d'exclusion Hyper-V — ces plages sont
+   réallouées dynamiquement à chaque (re)démarrage du réseau/WSL2, elles ne
+   sont pas figées. `1514`/`1515` republiés en `7514`/`7515` (agent
+   `victim-win10` reconfiguré en conséquence) pour repasser sous une plage
+   large et stable dans les tests effectués (6664-17386).
+   **Procédure en cas de port injoignable après redémarrage** :
+   `netsh interface ipv4 show excludedportrange protocol=tcp`, vérifier si
+   le port utilisé tombe dans une plage listée, et si oui republier le
+   service Docker concerné sur un port hors de toutes les plages
+   affichées (ne jamais modifier les plages d'exclusion elles-mêmes — géré
+   par Hyper-V/WSL2, nécessaire au réseau des VMs).
 
 ## Test réalisé
 
