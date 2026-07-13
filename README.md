@@ -36,7 +36,11 @@ chacune avec son propre labo isolé.
 | 7 | Hébergement cloud | Migrer sur un serveur Linux dédié (fin de la fragilité Hyper-V/WSL2) | ⏳ en attente (GitHub Student Pack approuvé, actif dans 72h) |
 | 8 | Authentification dashboard | Auth.js + Prisma/SQLite, login requis | ✅ déployé |
 | 9 | Isolation Wazuh par utilisateur | Groupes d'agents + filtrage serveur | ✅ déployé |
-| 10 | Orchestrateur de labos | Conteneurs à la demande, isolés par utilisateur | ⏳ à venir |
+| 10 | Orchestrateur de labos | Conteneurs à la demande, isolés par utilisateur | ✅ déployé |
+
+Les briques 8-10 (auth, isolation, orchestrateur) sont en place et testées
+avec deux utilisateurs simultanés. Il ne reste que la brique 7
+(hébergement cloud) pour sortir du PC Windows local.
 
 ## Environnement
 
@@ -53,7 +57,11 @@ chacune avec son propre labo isolé.
 - **Gestion d'incidents (TheHive + Cortex)** : Docker Compose,
   `thehive/testing/`, sur cette même machine
 - **Dashboard unifié** : Next.js, `dashboard/`, consomme l'API Wazuh en
-  lecture seule côté serveur
+  lecture seule côté serveur, avec authentification et isolation par
+  utilisateur
+- **Orchestrateur de labos** : `orchestrator/`, provisionne à la demande
+  une cible + un attaquant isolés par utilisateur (voir
+  [docs/09-lab-orchestrator.md](docs/09-lab-orchestrator.md))
 
 ## Démarrage rapide — Wazuh
 
@@ -65,6 +73,19 @@ docker compose up -d
 
 Dashboard : https://localhost — utilisateur `admin`, mot de passe par défaut
 `SecretPassword` (voir `docker-compose.yml`, à changer avant tout usage exposé).
+
+## Démarrage rapide — Orchestrateur de labos
+
+```bash
+cd orchestrator
+docker build -t lab-attacker:latest ./attacker-image   # une seule fois
+cp .env.example .env   # renseigner WAZUH_API_PASSWORD
+docker compose up -d --build
+```
+
+API interne sur `127.0.0.1:4100` (jamais exposée au-delà de l'hôte), pilotée
+par le dashboard via `/api/lab`. Voir
+[docs/09-lab-orchestrator.md](docs/09-lab-orchestrator.md).
 
 ## Démarrage rapide — MISP
 
@@ -118,4 +139,5 @@ attribué automatiquement à la création). Voir
 - [docs/06-dashboard.md](docs/06-dashboard.md)
 - [docs/07-dashboard-auth.md](docs/07-dashboard-auth.md)
 - [docs/08-wazuh-isolation.md](docs/08-wazuh-isolation.md)
+- [docs/09-lab-orchestrator.md](docs/09-lab-orchestrator.md)
 - [docs/00-platform-plan.md](docs/00-platform-plan.md) — plan de la phase 2 (multi-utilisateurs)

@@ -110,6 +110,14 @@ export function IconShare({ className }: IconProps) {
   );
 }
 
+export function IconPlay({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" className={className}>
+      <path d="M6 4.5 15 10l-9 5.5v-11Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 export function IconDot({ className }: IconProps) {
   return (
     <svg viewBox="0 0 8 8" fill="currentColor" className={className}>

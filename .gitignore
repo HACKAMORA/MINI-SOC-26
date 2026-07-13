@@ -9,6 +9,9 @@ vms/**/*.avhdx
 # locally from misp/template.env, never versioned
 misp/.env
 
+# Orchestrator: Wazuh API credentials
+orchestrator/.env
+
 # OS / editor cruft
 .DS_Store
 Thumbs.db

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { IconGrid, IconBell, IconServer, IconDatabase, IconFolder, IconShield, IconShare } from "./icons";
+import { IconGrid, IconBell, IconServer, IconDatabase, IconFolder, IconShield, IconShare, IconPlay } from "./icons";
 
 const nav = [
   { href: "/", label: "Overview", icon: IconGrid },
@@ -10,6 +10,8 @@ const nav = [
   { href: "/agents", label: "Agents", icon: IconServer },
   { href: "/topology", label: "Topologie", icon: IconShare },
 ];
+
+const labNav = [{ href: "/lab", label: "Mon labo", icon: IconPlay }];
 
 const soon = [
   { label: "Threat Intel", icon: IconDatabase },
@@ -33,6 +35,29 @@ export function Sidebar() {
 
       <nav className="flex-1 px-3 py-4 space-y-0.5">
         <div className="px-2 pb-2 text-[11px] font-medium uppercase tracking-wider text-muted">
+          Simulation
+        </div>
+        {labNav.map((item) => {
+          const active = pathname === item.href;
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm transition-colors ${
+                active
+                  ? "bg-brand-soft text-foreground font-medium"
+                  : "text-muted hover:bg-surface-hover hover:text-foreground"
+              }`}
+            >
+              <Icon className={`h-4 w-4 ${active ? "text-brand" : ""}`} />
+              {item.label}
+              {active && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-brand" />}
+            </Link>
+          );
+        })}
+
+        <div className="px-2 pb-2 pt-5 text-[11px] font-medium uppercase tracking-wider text-muted">
           Surveillance
         </div>
         {nav.map((item) => {
