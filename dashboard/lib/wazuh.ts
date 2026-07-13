@@ -96,6 +96,10 @@ export interface AlertRow {
 }
 
 export interface AlertsFilter {
+  // Required, never optional: every caller must scope to a Wazuh agent
+  // group derived from the authenticated session (brique 9 isolation).
+  // Never accept this value from client input — see app/api/alerts/route.ts.
+  group: string;
   size?: number;
   agentName?: string;
   severity?: Severity;
@@ -116,8 +120,11 @@ function severityLevelRange(severity: Severity): { gte: number; lte?: number } {
   }
 }
 
-export async function getAlerts(filter: AlertsFilter = {}): Promise<AlertRow[]> {
-  const must: unknown[] = [];
+export async function getAlerts(filter: AlertsFilter): Promise<AlertRow[]> {
+  const agentIds = await getAgentIdsForGroup(filter.group);
+  if (agentIds.length === 0) return [];
+
+  const must: unknown[] = [{ terms: { "agent.id": agentIds } }];
   if (filter.agentName) must.push({ match: { "agent.name": filter.agentName } });
   if (filter.source) must.push({ match: { "rule.groups": filter.source } });
   if (filter.search) {
@@ -131,7 +138,7 @@ export async function getAlerts(filter: AlertsFilter = {}): Promise<AlertRow[]> 
   const body = await indexerSearch({
     size: filter.size ?? 50,
     sort: [{ timestamp: { order: "desc" } }],
-    query: must.length ? { bool: { must } } : { match_all: {} },
+    query: { bool: { must } },
   });
 
   interface Hit {
@@ -178,12 +185,20 @@ export interface SeverityCounts {
   total: number;
 }
 
-export async function getSeverityCounts(hoursBack = 24): Promise<SeverityCounts> {
+export async function getSeverityCounts(group: string, hoursBack = 24): Promise<SeverityCounts> {
+  const agentIds = await getAgentIdsForGroup(group);
+  if (agentIds.length === 0) {
+    return { critical: 0, high: 0, medium: 0, low: 0, total: 0 };
+  }
+
   const body = await indexerSearch({
     size: 0,
     query: {
-      range: {
-        timestamp: { gte: `now-${hoursBack}h` },
+      bool: {
+        must: [
+          { terms: { "agent.id": agentIds } },
+          { range: { timestamp: { gte: `now-${hoursBack}h` } } },
+        ],
       },
     },
     aggs: {
@@ -240,10 +255,26 @@ async function getApiToken(): Promise<string> {
   return token;
 }
 
-export async function getAgents(): Promise<AgentSummary[]> {
+// Resolves a Wazuh agent *group* (see docs/07-dashboard-auth.md — every
+// user has one, derived at account creation) to the concrete agent IDs
+// currently in it. Alert/stat queries filter by these IDs since the
+// alerts index itself carries no group field — only the Manager API does.
+export async function getAgentIdsForGroup(group: string): Promise<string[]> {
+  const token = await getApiToken();
+  const { status, json } = await httpsJson<{ data: { affected_items: { id: string }[] } }>(
+    `${API_URL}/agents?group=${encodeURIComponent(group)}&select=id`,
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  if (status >= 400) {
+    throw new Error(`Wazuh API error ${status}: ${JSON.stringify(json)}`);
+  }
+  return json.data.affected_items.map((a) => a.id);
+}
+
+export async function getAgents(group: string): Promise<AgentSummary[]> {
   const token = await getApiToken();
   const { status, json } = await httpsJson<{ data: { affected_items: unknown[] } }>(
-    `${API_URL}/agents?select=id,name,ip,status,os.name,os.platform,lastKeepAlive`,
+    `${API_URL}/agents?group=${encodeURIComponent(group)}&select=id,name,ip,status,os.name,os.platform,lastKeepAlive`,
     { headers: { Authorization: `Bearer ${token}` } }
   );
   if (status >= 400) {

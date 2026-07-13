@@ -35,7 +35,7 @@ chacune avec son propre labo isolé.
 |---|--------|----------|--------|
 | 7 | Hébergement cloud | Migrer sur un serveur Linux dédié (fin de la fragilité Hyper-V/WSL2) | ⏳ en attente (GitHub Student Pack approuvé, actif dans 72h) |
 | 8 | Authentification dashboard | Auth.js + Prisma/SQLite, login requis | ✅ déployé |
-| 9 | Isolation Wazuh par utilisateur | Groupes d'agents + filtrage serveur | ⏳ à venir |
+| 9 | Isolation Wazuh par utilisateur | Groupes d'agents + filtrage serveur | ✅ déployé |
 | 10 | Orchestrateur de labos | Conteneurs à la demande, isolés par utilisateur | ⏳ à venir |
 
 ## Environnement
@@ -101,9 +101,12 @@ npx tsx prisma/seed.ts <email> <mot-de-passe>   # créer un compte
 npm run dev
 ```
 
-Interface : http://localhost:3000 (login requis). Voir
-[docs/06-dashboard.md](docs/06-dashboard.md) et
-[docs/07-dashboard-auth.md](docs/07-dashboard-auth.md).
+Interface : http://localhost:3000 (login requis). Chaque compte ne voit que
+les alertes/agents de son propre groupe Wazuh (`user-<préfixe-email>`,
+attribué automatiquement à la création). Voir
+[docs/06-dashboard.md](docs/06-dashboard.md),
+[docs/07-dashboard-auth.md](docs/07-dashboard-auth.md) et
+[docs/08-wazuh-isolation.md](docs/08-wazuh-isolation.md).
 
 ## Journal des briques
 
@@ -114,4 +117,5 @@ Interface : http://localhost:3000 (login requis). Voir
 - [docs/05-thehive-cortex.md](docs/05-thehive-cortex.md)
 - [docs/06-dashboard.md](docs/06-dashboard.md)
 - [docs/07-dashboard-auth.md](docs/07-dashboard-auth.md)
+- [docs/08-wazuh-isolation.md](docs/08-wazuh-isolation.md)
 - [docs/00-platform-plan.md](docs/00-platform-plan.md) — plan de la phase 2 (multi-utilisateurs)
