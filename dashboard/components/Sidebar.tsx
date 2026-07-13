@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { IconGrid, IconBell, IconServer, IconDatabase, IconFolder, IconShield, IconShare, IconPlay } from "./icons";
 
 const nav = [
-  { href: "/", label: "Overview", icon: IconGrid },
+  { href: "/dashboard", label: "Overview", icon: IconGrid },
   { href: "/alerts", label: "Alertes", icon: IconBell },
   { href: "/agents", label: "Agents", icon: IconServer },
   { href: "/topology", label: "Topologie", icon: IconShare },
@@ -23,7 +23,7 @@ export function Sidebar() {
 
   return (
     <aside className="hidden md:flex w-60 shrink-0 flex-col border-r border-border bg-surface/60">
-      <div className="flex items-center gap-2.5 px-5 h-16 border-b border-border">
+      <Link href="/dashboard" className="flex items-center gap-2.5 px-5 h-16 border-b border-border">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-white">
           <IconShield className="h-4.5 w-4.5" />
         </div>
@@ -31,7 +31,7 @@ export function Sidebar() {
           <div className="text-sm font-semibold text-foreground">Mini-SOC</div>
           <div className="text-[11px] text-muted">Security Operations</div>
         </div>
-      </div>
+      </Link>
 
       <nav className="flex-1 px-3 py-4 space-y-0.5">
         <div className="px-2 pb-2 text-[11px] font-medium uppercase tracking-wider text-muted">

@@ -114,3 +114,25 @@ conforme à l'objectif « produit professionnel ».**
   la page Topologie ne montre que `victim-win10` comme point réel du parc,
   les autres proviennent uniquement de leur définition statique
   (`lib/topology.ts`).
+
+> Note (postérieure, après briques 8-10) : l'authentification a depuis été
+> ajoutée — voir [docs/07-dashboard-auth.md](07-dashboard-auth.md). Cette
+> page reste un instantané de l'état à la fin de la brique 6, volontairement
+> non réécrite.
+
+## Addendum — page d'accueil publique (`/`)
+
+Ajoutée après les briques 8-10, à la demande de l'utilisateur, sur le
+modèle visuel d'une référence de landing page (dégradé sombre, grain,
+typographie XXL, carte hero aux coins arrondis) — appliquée uniquement à
+`app/page.tsx`, jamais aux écrans de données (illisible sur des tableaux
+denses). Restructuration de routing associée : l'Overview du dashboard,
+auparavant sur `/`, est passée sur `/dashboard` ; `/` et `/login` sont les
+deux seules routes publiques (`auth.config.ts`), tout le reste continue
+d'exiger une session.
+
+La grille "Construction progressive" affiche le statut réel de chaque
+brique (déployé/en attente) directement depuis le code — pas de métriques
+de façade, cohérent avec le principe déjà appliqué à la page Topologie
+(brique 6) de ne jamais présenter comme réel ce qui ne l'est pas.
+

@@ -8,13 +8,15 @@ export const authConfig: NextAuthConfig = {
   providers: [],
   callbacks: {
     authorized({ auth, request }) {
+      const { pathname } = request.nextUrl;
       const isLoggedIn = Boolean(auth?.user);
-      const isLoginPage = request.nextUrl.pathname === "/login";
+      // "/" is the public landing page — always visible, logged in or not.
+      const isPublicPage = pathname === "/" || pathname === "/login";
 
-      if (isLoggedIn && isLoginPage) {
-        return Response.redirect(new URL("/", request.nextUrl));
+      if (isLoggedIn && pathname === "/login") {
+        return Response.redirect(new URL("/dashboard", request.nextUrl));
       }
-      if (!isLoggedIn && !isLoginPage) {
+      if (!isLoggedIn && !isPublicPage) {
         return false; // Auth.js redirects to `pages.signIn` automatically.
       }
       return true;

@@ -77,3 +77,28 @@ body {
   background: var(--border);
   border-radius: 8px;
 }
+
+/* Landing page only: subtle film-grain texture over gradient hero
+   backgrounds, via an inline SVG feTurbulence data-URI (no asset file,
+   no request). Kept out of the dashboard proper — data screens want
+   flat, legible surfaces, not texture. */
+.bg-grain {
+  position: relative;
+}
+.bg-grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(-2%, 2%) rotate(3deg); }
+}
+.animate-drift {
+  animation: drift 8s ease-in-out infinite;
+}
