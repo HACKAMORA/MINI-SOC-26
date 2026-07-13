@@ -78,27 +78,64 @@ body {
   border-radius: 8px;
 }
 
-/* Landing page only: subtle film-grain texture over gradient hero
-   backgrounds, via an inline SVG feTurbulence data-URI (no asset file,
-   no request). Kept out of the dashboard proper — data screens want
-   flat, legible surfaces, not texture. */
-.bg-grain {
-  position: relative;
-}
-.bg-grain::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.35;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+/* Landing page only (app/page.tsx): a distinct light theme, scoped under
+   .landing so it never leaks into the dark dashboard. Also declared in
+   @theme inline below so Tailwind generates matching utilities
+   (bg-landing-bg, text-landing-ink, etc). */
+.landing {
+  --landing-bg: #f5f1e8;
+  --landing-surface: #ffffff;
+  --landing-ink: #16181c;
+  --landing-muted: #6b7178;
+  --landing-line: #e7e1d4;
+  --landing-accent: #1f6f5c;
+  --landing-accent-soft: #e2ede9;
+  color-scheme: light;
+  background: var(--landing-bg);
+  color: var(--landing-ink);
 }
 
-@keyframes drift {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  50% { transform: translate(-2%, 2%) rotate(3deg); }
+@theme inline {
+  --color-landing-bg: var(--landing-bg);
+  --color-landing-surface: var(--landing-surface);
+  --color-landing-ink: var(--landing-ink);
+  --color-landing-muted: var(--landing-muted);
+  --color-landing-line: var(--landing-line);
+  --color-landing-accent: var(--landing-accent);
+  --color-landing-accent-soft: var(--landing-accent-soft);
+  --font-serif: Georgia, "Times New Roman", serif;
 }
-.animate-drift {
-  animation: drift 8s ease-in-out infinite;
+
+/* Staggered entrance: apply animate-fade-up with an inline animationDelay
+   per element for a cascading reveal instead of everything popping at once. */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up {
+  animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(-3%, -4%) rotate(4deg); }
+}
+.animate-float-slow {
+  animation: float-slow 7s ease-in-out infinite;
+}
+
+@keyframes float-slower {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(3%, 5%) rotate(-3deg); }
+}
+.animate-float-slower {
+  animation: float-slower 9s ease-in-out infinite;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 22s linear infinite;
 }
